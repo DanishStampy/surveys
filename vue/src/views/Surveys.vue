@@ -1,11 +1,11 @@
 <template>
-    <PageComponent title="Dashboard">
-        Content goes heree
-    </PageComponent>
+  <PageComponent title="Surveys">
+    Content goess hereee
+  </PageComponent>
 </template>
 
 <script setup>
 import PageComponent from '../components/PageComponent.vue';
 </script>
 
-<style scoped></style>
+<style></style>
