@@ -11,7 +11,7 @@ const tmpSurveys = [
         description: "Pistachio vs Almond",
         created_at: "2023-01-01 18:00:00",
         updated_at: "2023-01-01 18:00:00",
-        expired_at: "2023-01-01 18:00:00",
+        expire_at: "2023-01-01 18:00:00",
         questions: [
             {
                 id: 1,
@@ -113,6 +113,7 @@ const store = createStore({
             token: sessionStorage.getItem("TOKEN"),
         },
         surveys: [...tmpSurveys],
+        questionTypes: ["text", "select", "radio", "checkbox", "textarea"]
     },
     getters: {},
     actions: {
