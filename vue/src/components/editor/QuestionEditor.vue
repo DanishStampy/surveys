@@ -154,8 +154,12 @@ function typeChange() {
 }
 
 // emit the data changes
+// means every changes of the question, like add new options or rmv options
+// it will stay-up-to date
 function dataChange() {
     const data = JSON.parse(JSON.stringify(model.value));
+    // console.log(model.value);
+    // console.log(data)
     if(!isOptionRequired()) {
         delete data.data.options;
     }

@@ -3,18 +3,21 @@
     <template #header>
       <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold text-gray-900">
-          {{ model.id ? model.title : "Create a Survey" }}
+          {{ model.id ? model.title : (surveyLoading) ? "Loading..." : "Create a Survey" }}
         </h1>
       </div>
     </template>
-    <form @submit.prevent="saveSurvey">
+    <div v-if="surveyLoading" class="flex items-center justify-center mt-5">
+      <MoonLoader :loading="surveyLoading" :color="color" :size="size"></MoonLoader>
+    </div>
+    <form v-else @submit.prevent="saveSurvey()">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <!-- image -->
           <div>
             <label class="block text-sm font-medium text-gray-700">Image</label>
             <div class="mt-1 flex items-center">
-              <img v-if="model.image" :src="model.image" :alt="model.title" class="w-64 h-48 object-cover">
+              <img v-if="model.image_url" :src="model.image_url" :alt="model.title" class="w-64 h-48 object-cover">
               <span v-else class="flex items-center justify-center h-12 w-12 rounded-full overflow-hidden bg-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="h-[80%] w-[80%] text-gray-300">
@@ -24,7 +27,7 @@
               </span>
               <button type="button"
                 class="relative overflow-hiddent ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <input type="file" class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer" />
+                <input type="file" @change="onImagePick" class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer" />
                 Change
               </button>
             </div>
@@ -85,7 +88,7 @@
             You don't have any questions created
           </div>
           <div v-for="(question, index) in model.questions" :key="question.id">
-            <QuestionEditor :question="question" :index="index" @change="questionChange" @addQuestion="addQuestion" @deleteQuestion="deleteQuestion" />
+            <QuestionEditor :question="question" :index="index" @change="questionChange()" @addQuestion="addQuestion()" @deleteQuestion="deleteQuestion()" />
           </div>
         </div>
 
@@ -103,25 +106,54 @@
 
 <script setup>
 import store from '../store';
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, watch, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
+import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 import PageComponent from "../components/PageComponent.vue";
 import QuestionEditor from "../components/editor/QuestionEditor.vue";
 
 const route = useRoute();
+const router = useRouter();
+const surveyLoading = computed(() => store.state.currentSurvey.loading);
 const model = ref({
   title: '',
   status: false,
   description: null,
-  image: null,
+  image_url: null,
   expire_date: null,
   questions: [],
 })
 
+// Watch to currentSurvey data change
+// When happens update local model array
+watch(
+  () => store.state.currentSurvey.data,
+  (newVal, oldVal) => {
+    model.value = {
+      ...JSON.parse(JSON.stringify(newVal)),
+      status: newVal.status !== "draft",
+    };
+  }
+);
+
+
 if (route.params.id) {
-  console.log(route.params.id)
-  model.value = store.state.surveys.find((s) => s.id === parseInt(route.params.id))
+  store.dispatch('getSurvey', route.params.id);
+}
+
+function onImagePick (e) {
+  const file = e.target.files[0];
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    // save to backend
+    model.value.image = reader.result;
+
+    // display on frontend
+    model.value.image_url = reader.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 function addQuestion(index) {
@@ -147,6 +179,17 @@ function questionChange(question) {
     }
     return q;
   })
+}
+
+// Create/update survey
+function saveSurvey() {
+  console.log(model.value);
+  store.dispatch("saveSurvey", model.value).then(({ data }) => {
+    router.push({
+      name: "SurveyView",
+      params: { id: data.data.id },
+    });
+  });
 }
 
 </script>
