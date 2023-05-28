@@ -79,11 +79,13 @@ const store = createStore({
                         commit("setCurrentSurvey", res.data);
                         return res;
                     });
+            
+            // create survey
             } else {
-                // create survey
                 response = axiosClient.post('/survey', survey)
                     .then((res) => {
                         commit("setCurrentSurvey", res.data);
+                        commit("setSurveys", res.data);
                         return res;
                     });
             }
@@ -116,18 +118,6 @@ const store = createStore({
             state.surveys.loading = isLoading;
         },
 
-        // survey
-        // updateSurvey: (state, survey) => {
-        //     state.surveys = state.surveys.map((s) => {
-        //         if(s.id === survey.data.id) {
-        //             return survey.data;
-        //         }
-        //         return s;
-        //     });
-        // },
-        // saveSurvey: (state, survey) => {
-        //     state.surveys = [...state.surveys, survey.data];
-        // },
         setCurrentSurvey: (state, survey) => {
             state.currentSurvey.data = survey.data;
         },
