@@ -13,6 +13,7 @@ const store = createStore({
         },
         surveys: {
             loading: false,
+            links: [],
             data: [],
         },
         questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
@@ -46,9 +47,12 @@ const store = createStore({
         },
 
         // survey
-        getAllSurvey({ commit }) {
+        getAllSurvey({ commit }, { url = null } = {}) {
+            // check if url is falsy value (undefined), append '/survey'.
+            // otherwise, append url itself
+            url = url || '/survey' 
             commit('setAllSurveyLoading', true);
-            return axiosClient.get("/survey").then((res) => {
+            return axiosClient.get(url).then((res) => {
                 commit('setAllSurveyLoading', false);
                 commit('setSurveys', res.data);
                 return res;
@@ -137,6 +141,7 @@ const store = createStore({
         },
 
         setSurveys: (state, surveys) => {
+            state.surveys.links = surveys.meta.links;
             state.surveys.data = surveys.data;
         }
 

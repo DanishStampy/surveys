@@ -18,9 +18,27 @@
     <div v-if="surveys.loading" class="flex h-[70vh] items-center justify-center mt-5">
       <MoonLoader :loading="true" :color="color" :size="size"></MoonLoader>
     </div>
-    <div v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-      <SurveyListItem  v-for="(survey, index) in surveys.data" :key="survey.id" :survey="survey" @delete="deleteSurvey(survey)" class="opacity-0 animate-fade-in-down" :style="{ animationDelay: `${index * 0.1}s` }" />
+
+    <div v-else>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <SurveyListItem  v-for="(survey, index) in surveys.data" :key="survey.id" :survey="survey" @delete="deleteSurvey(survey)" class="opacity-0 animate-fade-in-down" :style="{ animationDelay: `${index * 0.1}s` }" />
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center mt-5">
+        <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm" aria-label="Pagination">
+          <a v-for="(link, index) of surveys.links" :key="index" :disabled="!link.url" v-html="link.label" href="#" @click="getForPage($event, link)" class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap" 
+          :class="[
+            link.active ?
+              'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' :
+              'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+            index === 0 ? 'rounded-l-md' : '',
+            index === surveys.links.length - 1 ? 'rounded-r-md' : '',
+          ]"></a>
+        </nav>
+      </div>
     </div>
+    <!-- <pre>{{ surveys.links }}</pre> -->
   </PageComponent>
 </template>
 
@@ -42,6 +60,15 @@ function deleteSurvey(survey) {
         store.dispatch('getAllSurvey');
       })
   }
+}
+
+function getForPage(ev, link) {
+  ev.preventDefault();
+  if(!link.url || link.active) {
+    return;
+  }
+
+  store.dispatch("getAllSurvey", { url: link.url });
 }
 </script>
 
