@@ -1,7 +1,6 @@
 import { createStore } from "vuex";
 import axiosClient from "../axios";
 
-
 const store = createStore({
     state: {
         user: {
@@ -66,11 +65,8 @@ const store = createStore({
         },
 
         saveSurvey({ commit }, survey) {
-
             delete survey.image_url;
-
             let response;
-
             // update sruvey
             if(survey.id) {
                 response = axiosClient

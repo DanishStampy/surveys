@@ -33,7 +33,7 @@
         <!-- question -->
         <div class="mt-3 col-span-9">
             <label :for="'question_text_' + model.data" class="block text-sm font-medium text-gray-700">Question Text</label>
-            <input type="text" :name="'question_text_' + model.data" v-model="model.question" @change="dataChange()"
+            <input type="text" :name="'question_text_' + model.data" v-model="model.question" @change="dataChange"
                 :id="'question_text_' + model.data"
                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
         </div>
@@ -41,7 +41,7 @@
         <!-- question type -->
         <div class="mt-3 col-span-3">
             <label for="question_type" class="block text-sm font-medium text-gray-700">Select Question Type</label>
-            <select name="question_type" id="question_type" v-model="model.type" @change="typeChange()"
+            <select name="question_type" id="question_type" v-model="model.type" @change="typeChange"
                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option v-for="(type, index) in questionTypes" :key="index" :value="type">
                     {{ upperCaseFirst(type) }}
@@ -52,9 +52,11 @@
 
     <div class="mt-3 col-span-9">
         <label :for="'question_description_' + model.id" class="block text-sm font-medium text-gray-700">Description</label>
-        <textarea :name="'question_description_' + model.id" v-model="model.description" @change="dataChange()"
+        <textarea :name="'question_description_' + model.id" v-model="model.description" @change="dataChange"
             :id="'question_description_' + model.id"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-sm"></textarea>
+        
+            
     </div>
 
     <!-- Data -->
@@ -63,7 +65,7 @@
             <h4 class="text-sm font-semibold mb-1 flex justify-between items-center">
                 Options
                 <!-- add new options -->
-                <button type="button" @click="addOption()"
+                <button type="button" @click="addOption"
                     class="flex items-center text-xs py-1 px-2 rounded-sm text-white bg-gray-600 hover:bg-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
@@ -80,7 +82,7 @@
             <!-- option list -->
             <div v-for="(option, index) in model.data.options" :key="option.uuid" class="flex items-center mb-1">
                 <span class="w-6 text-sm">{{ index + 1 }}</span>
-                <input type="text" v-model="option.text" @change="dataChange()" class="w-full rounded-sm py-1 px-2 text-xs border border-gray-300 focus:border-indigo-500">
+                <input type="text" v-model="option.text" @change="dataChange" class="w-full rounded-sm py-1 px-2 text-xs border border-gray-300 focus:border-indigo-500">
                 
                 <!-- delete option -->
                 <button type="button" @click="removeOption(option)" class="h-6 w-6 rounded-full flex items-center justify-center border border-transparent transition-colors hover:border-red-100">
@@ -107,7 +109,11 @@ const props = defineProps({
     index: Number,
 });
 
-const emit = defineEmits(["change", "addQuestion", "deleteQuestion"]);
+const emit = defineEmits([
+    "change", 
+    "addQuestion", 
+    "deleteQuestion"
+]);
 
 const model = ref(JSON.parse(JSON.stringify(props.question)));
 // get questiontypes
@@ -164,7 +170,7 @@ function dataChange() {
         delete data.data.options;
     }
 
-    emit("change", data)
+    emit("change", data);
 }
 
 function addQuestion() {

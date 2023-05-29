@@ -86,7 +86,7 @@
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <h3 class="text-2xl font-semibold flex items-center justify-between">
             Question
-            <button type="button" @click="addQuestion()"
+            <button type="button" @click="addQuestion(model.questions.length)"
               class="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-4 h-4">
@@ -99,8 +99,8 @@
             You don't have any questions created
           </div>
           <div v-for="(question, index) in model.questions" :key="question.id">
-            <QuestionEditor :question="question" :index="index" @change="questionChange()" @addQuestion="addQuestion()"
-              @deleteQuestion="deleteQuestion()" />
+            <QuestionEditor :question="question" :index="index" @change="questionChange" @addQuestion="addQuestion"
+              @deleteQuestion="deleteQuestion" />
           </div>
         </div>
 
@@ -168,7 +168,8 @@ function onImagePick(e) {
   reader.readAsDataURL(file);
 }
 
-function addQuestion(index) {
+const addQuestion = (index) => {
+  console.log(index)
   const newQuestion = {
     id: uuidv4(),
     type: "text",
@@ -185,6 +186,7 @@ function deleteQuestion(question) {
 }
 
 function questionChange(question) {
+  console.log(question)
   model.value.questions = model.value.questions.map((q) => {
     if (q.id === question.id) {
       return JSON.parse(JSON.stringify(question));
