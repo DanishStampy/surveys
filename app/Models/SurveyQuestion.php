@@ -16,4 +16,8 @@ class SurveyQuestion extends Model
         'description',
         'data'
     ];
+
+    public function survey() {
+        return $this->belongsTo(Survey::class);
+    }
 }

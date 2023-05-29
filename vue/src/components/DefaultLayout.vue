@@ -82,6 +82,8 @@
     </Disclosure>
 
     <router-view></router-view>
+
+    <Snackbar />
   </div>
 </template>
   
@@ -91,6 +93,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useStore } from 'vuex'
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import Snackbar from './Snackbar.vue';
 
 const navigation = [
   { name: 'Dashboard', to: { name: 'Dashboard' }, current: true },
@@ -99,17 +102,18 @@ const navigation = [
 
 export default {
   components: {
-    Disclosure, 
-    DisclosureButton, 
-    DisclosurePanel, 
-    Menu, 
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Menu,
     MenuButton,
     MenuItem,
     MenuItems,
     Bars3Icon,
     BellIcon,
-    XMarkIcon
-  },
+    XMarkIcon,
+    Snackbar
+},
 
   setup() {
     const store = useStore();

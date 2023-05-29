@@ -15,7 +15,12 @@ const store = createStore({
             loading: false,
             data: [],
         },
-        questionTypes: ["text", "select", "radio", "checkbox", "textarea"]
+        questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
+        snackbar: {
+            show: false,
+            type: null,
+            message: null,
+        }
     },
     getters: {},
     actions: {
@@ -113,7 +118,20 @@ const store = createStore({
         setAllSurveyLoading: (state, isLoading) => {
             state.surveys.loading = isLoading;
         },
+        showSnackbar: (state, {message, type}) => {
+            state.snackbar.show = true;
+            state.snackbar.message = message;
+            state.snackbar.type = type;
 
+            setTimeout(() => {
+                state.snackbar.show = false;
+            }, 3000);
+        },
+        closeSnackbar: (state, isClose) => {
+            state.snackbar.show = isClose;
+        },
+
+        // survey
         setCurrentSurvey: (state, survey) => {
             state.currentSurvey.data = survey.data;
         },

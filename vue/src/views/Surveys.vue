@@ -15,8 +15,11 @@
         </router-link>
       </div>
     </template>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-      <SurveyListItem  v-for="survey in surveys" :key="survey.id" :survey="survey" @delete="deleteSurvey(survey)" />
+    <div v-if="surveys.loading" class="flex h-[70vh] items-center justify-center mt-5">
+      <MoonLoader :loading="true" :color="color" :size="size"></MoonLoader>
+    </div>
+    <div v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+      <SurveyListItem  v-for="(survey, index) in surveys.data" :key="survey.id" :survey="survey" @delete="deleteSurvey(survey)" class="opacity-0 animate-fade-in-down" :style="{ animationDelay: `${index * 0.1}s` }" />
     </div>
   </PageComponent>
 </template>
@@ -24,10 +27,11 @@
 <script setup>
 import PageComponent from '../components/PageComponent.vue';
 import SurveyListItem from '../components/SurveyListItem.vue';
+import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 import { computed } from 'vue';
 import store from '../store';
 
-const surveys = computed(() => store.state.surveys.data);
+const surveys = computed(() => store.state.surveys);
 
 store.dispatch('getAllSurvey');
 

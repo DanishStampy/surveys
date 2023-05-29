@@ -20,7 +20,7 @@
     <div v-if="surveyLoading" class="flex items-center justify-center mt-5">
       <MoonLoader :loading="surveyLoading" :color="color" :size="size"></MoonLoader>
     </div>
-    <form v-else @submit.prevent="saveSurvey()">
+    <form v-else @submit.prevent="saveSurvey()" class="animate-fade-in-down">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <!-- image -->
@@ -107,7 +107,7 @@
         <!-- save btn -->
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
           <button type="submit"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white  bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white  bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ">
             {{ route.params.id ? 'Update' : 'Save' }}
           </button>
         </div>
@@ -199,6 +199,10 @@ function questionChange(question) {
 function saveSurvey() {
   console.log(model.value);
   store.dispatch("saveSurvey", model.value).then(({ data }) => {
+    store.commit('showSnackbar', {
+      type: 'success',
+      message: 'Survey was successfully updated!'
+    });
     router.push({
       name: "SurveyView",
       params: { id: data.data.id },
@@ -208,9 +212,13 @@ function saveSurvey() {
 
 // Delete Survey
 function deleteSurvey() {
-  if ( confirm('Are you sure want to delete this?') ) {
+  if (confirm('Are you sure want to delete this?')) {
     store.dispatch("deleteSurvey", model.value.id)
       .then(() => {
+        store.commit('showSnackbar', {
+          type: 'success',
+          message: 'Survey was successfully deleted!'
+        });
         router.push({ name: "Surveys" })
       })
   }
