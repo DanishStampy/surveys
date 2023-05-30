@@ -68,6 +68,12 @@ class SurveyController extends Controller
         return new SurveyResource($survey);
     }
 
+    // public function showPublic(Survey $survey)
+    // {
+        
+    //     return new SurveyResource($survey);
+    // }
+
     /**
      * Update the specified resource in storage.
      *
@@ -233,4 +239,5 @@ class SurveyController extends Controller
 
         return $question->update($validator->validated());
     }
+    
 }

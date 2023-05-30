@@ -50,7 +50,7 @@ const store = createStore({
         getAllSurvey({ commit }, { url = null } = {}) {
             // check if url is falsy value (undefined), append '/survey'.
             // otherwise, append url itself
-            url = url || '/survey' 
+            url = url || '/survey'
             commit('setAllSurveyLoading', true);
             return axiosClient.get(url).then((res) => {
                 commit('setAllSurveyLoading', false);
@@ -84,7 +84,7 @@ const store = createStore({
                         commit("setCurrentSurvey", res.data);
                         return res;
                     });
-            
+
             // create survey
             } else {
                 response = axiosClient.post('/survey', survey)
@@ -100,6 +100,26 @@ const store = createStore({
 
         deleteSurvey({ commit }, id) {
             return axiosClient.delete(`/survey/${id}`)
+        },
+
+        // survey public page
+        getSurveyBySlug({ commit }, slug) {
+            commit("setCurrentSurveyLoading", true);
+            return axiosClient
+                .get(`/survey-by-slug/${slug}`)
+                .then((res) => {
+                    commit("setCurrentSurvey", res.data);
+                    commit("setCurrentSurveyLoading", false);
+                    return res;
+                })
+                .catch((err) => {
+                    commit("setCurrentSurveyLoading", false);
+                    throw err;
+                });
+        },
+
+        saveSurveyAnswer({ commit }, { surveyId, answers }) {
+            return axiosClient.post(`/survey/${surveyId}/answer`, { answers });
         }
     },
     mutations: {
