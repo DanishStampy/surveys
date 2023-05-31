@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\SurveyPublicController;
 use Illuminate\Http\Request;
@@ -30,4 +31,5 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::resource('/survey', SurveyController::class);
     
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dahsboard.index');
 });

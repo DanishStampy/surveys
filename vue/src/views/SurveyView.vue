@@ -18,7 +18,7 @@
       </div>
     </template>
     <div v-if="surveyLoading" class="flex items-center justify-center mt-5">
-      <MoonLoader :loading="surveyLoading" :color="color" :size="size"></MoonLoader>
+      <MoonLoader :loading="surveyLoading" ></MoonLoader>
     </div>
     <form v-else @submit.prevent="saveSurvey()" class="animate-fade-in-down">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -57,7 +57,7 @@
             <div class="mt-1">
               <textarea name="description" id="description" rows="3" placeholder="Describe your survey"
                 v-model="model.description" autocomplete="survey_description"
-                class="mt-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
             </div>
           </div>
 
