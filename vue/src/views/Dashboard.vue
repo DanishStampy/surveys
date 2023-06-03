@@ -103,10 +103,10 @@ import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 
 const store = useStore();
 
-const loading = computed(() => store.state.dashboard.loading);
-const data = computed(() => store.state.dashboard.data);
+const loading = computed(() => store.state.dashboard.survey.loading);
+const data = computed(() => store.state.dashboard.survey.data);
 
-store.dispatch('getDashboardData');
+store.dispatch('dashboard/getDashboardData');
 
 </script>
 

@@ -134,7 +134,7 @@ export default {
         const router = useRouter();
 
         function logout() {
-            store.dispatch('logout')
+            store.dispatch('auth/logout')
                 .then(() => {
                     router.push({
                         name: 'Login'
@@ -143,7 +143,7 @@ export default {
         }
 
         return {
-            user: computed(() => store.state.user.data),
+            user: store.getters['auth/getUserData'],
             navigation,
             logout
         }

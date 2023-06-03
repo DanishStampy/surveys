@@ -97,12 +97,13 @@
 </template>
 
 <script setup>
-import store from '../store';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import Alert from '../components/Alert.vue';
 
 const router = useRouter();
+const store = useStore();
 const user = {
     name: '',
     email: '',
@@ -117,7 +118,7 @@ function register(e) {
     e.preventDefault();
     loading.value = true;
 
-    store.dispatch('register', user)
+    store.dispatch('auth/register', user)
         .then((res) => {
             loading.value = false;
             router.push({ name: 'Dashboard' });

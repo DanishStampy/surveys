@@ -10,6 +10,7 @@ import SurveyPublicView from '../views/SurveyPublicView.vue'
 import AuthLayout from '../components/AuthLayout.vue'
 import DefaultLayout from '../components/DefaultLayout.vue'
 
+// const store = useStore();
 const routes = [
     {
         path: '/',
@@ -70,9 +71,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !store.state.user.token) {
+    if (to.meta.requiresAuth && !store.state.auth.user.token) {
         next({ name: 'Login' });
-    } else if (store.state.user.token && to.meta.isGuest) {
+    } else if (store.state.auth.user.token && to.meta.isGuest) {
         next({ name: 'Dashboard' });
     } else {
         next();

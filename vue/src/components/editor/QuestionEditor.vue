@@ -55,8 +55,8 @@
         <textarea :name="'question_description_' + model.id" v-model="model.description" @change="dataChange"
             :id="'question_description_' + model.id"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-sm"></textarea>
-        
-            
+
+
     </div>
 
     <!-- Data -->
@@ -75,15 +75,15 @@
                 </button>
             </h4>
 
-            <div v-if="!model.data.options" class="text-xs text-gray-600 text-center py-3">
+            <div v-if="!model.data.options.length" class="text-xs text-gray-600 text-center py-3">
                 You don't have any options defined
             </div>
-
+            
             <!-- option list -->
             <div v-for="(option, index) in model.data.options" :key="option.uuid" class="flex items-center mb-1">
                 <span class="w-6 text-sm">{{ index + 1 }}</span>
                 <input type="text" v-model="option.text" @change="dataChange" class="w-full rounded-sm py-1 px-2 text-xs border border-gray-300 focus:border-indigo-500">
-                
+
                 <!-- delete option -->
                 <button type="button" @click="removeOption(option)" class="h-6 w-6 rounded-full flex items-center justify-center border border-transparent transition-colors hover:border-red-100">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -102,22 +102,23 @@
 <script setup>
 import { ref, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import store from "../../store";
+import { useStore } from "vuex";
 
+const store = useStore();
 const props = defineProps({
     question: Object,
     index: Number,
 });
 
 const emit = defineEmits([
-    "change", 
-    "addQuestion", 
+    "change",
+    "addQuestion",
     "deleteQuestion"
 ]);
 
 const model = ref(JSON.parse(JSON.stringify(props.question)));
 // get questiontypes
-const questionTypes = computed(() => store.state.questionTypes);
+const questionTypes = computed(() => store.getters['survey/getQuestionTypes']);
 
 function upperCaseFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);

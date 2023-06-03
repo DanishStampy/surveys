@@ -22,10 +22,10 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
-const snackbar = computed(() => store.state.snackbar);
+const snackbar = computed(() => store.getters['survey/getSnackbar']);
 
 function closeSnackbar() {
-  store.commit('closeSnackbar', false);
+  store.commit('survey/closeSnackbar', false);
 }
 
 </script>

@@ -77,12 +77,13 @@
 </template>
 
 <script setup>
-import store from '../store';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import Alert from '../components/Alert.vue';
 
 const router = useRouter();
+const store = useStore();
 const user = {
     email: '',
     password: '',
@@ -96,17 +97,17 @@ function login(e) {
     e.preventDefault();
     loading.value = true;
 
-    store.dispatch('login', user)
+    store.dispatch('auth/login', user)
         .then(() => {
             loading.value = false;
             router.push({ name: 'Dashboard' });
         })
-        .catch(err => {
-            loading.value = false;
-            errorMsg.value = err.response.data.hasOwnProperty("errors")
-                ? err.response.data.errors['email'][0]
-                : err.response.data.error;
-        });
+        // .catch(err => {
+        //     loading.value = false;
+        //     errorMsg.value = err.response.data.hasOwnProperty("errors")
+        //         ? err.response.data.errors['email'][0]
+        //         : err.response.data.error;
+        // });
 }
 
 </script>

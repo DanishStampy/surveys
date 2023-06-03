@@ -1,7 +1,7 @@
 <template>
     <div class="py-5 px-8">
         <div v-if="loading" class="flex justify-center">
-            <MoonLoader :loading="true" :color="color" :size="size"></MoonLoader>
+            <MoonLoader :loading="true" ></MoonLoader>
         </div>
 
         <form v-else @submit.prevent="submitSurvey" class="container mx-auto">
@@ -49,17 +49,17 @@ import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 const route = useRoute();
 const store = useStore();
 
-const loading = computed(() => store.state.currentSurvey.loading);
-const survey = computed(() => store.state.currentSurvey.data);
+const loading = computed(() => store.getters['survey/currentSurveyLoading'])
+const survey = computed(() => store.getters['survey/currentSurveyData']);
 
 const surveyFinished = ref(false);
 const answers = ref({});
 
-store.dispatch("getSurveyBySlug", route.params.slug);
+store.dispatch("survey/getSurveyBySlug", route.params.slug);
 
 function submitSurvey() {
     //console.log(JSON.stringify(answers.value, undefined, 2));
-    store.dispatch("saveSurveyAnswer", {
+    store.dispatch("survey/saveSurveyAnswer", {
         surveyId: survey.value.id,
         answers: answers.value
     })

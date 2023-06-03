@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import store from '../store';
+import { useStore } from 'vuex';
 import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -125,9 +125,11 @@ import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 import PageComponent from "../components/PageComponent.vue";
 import QuestionEditor from "../components/editor/QuestionEditor.vue";
 
+const store = useStore();
 const route = useRoute();
 const router = useRouter();
-const surveyLoading = computed(() => store.state.currentSurvey.loading);
+
+const surveyLoading = computed(() => store.getters['survey/currentSurveyLoading']);
 const model = ref({
   title: '',
   status: false,
@@ -140,7 +142,7 @@ const model = ref({
 // Watch to currentSurvey data change
 // When happens update local model array
 watch(
-  () => store.state.currentSurvey.data,
+  () => store.getters['survey/currentSurveyData'],
   (newVal, oldVal) => {
     model.value = {
       ...JSON.parse(JSON.stringify(newVal)),
@@ -151,7 +153,7 @@ watch(
 
 
 if (route.params.id) {
-  store.dispatch('getSurvey', route.params.id);
+  store.dispatch('survey/getSurvey', route.params.id);
 }
 
 function onImagePick(e) {
@@ -198,8 +200,8 @@ function questionChange(question) {
 // Create/update survey
 function saveSurvey() {
   console.log(model.value);
-  store.dispatch("saveSurvey", model.value).then(({ data }) => {
-    store.commit('showSnackbar', {
+  store.dispatch("survey/saveSurvey", model.value).then(({ data }) => {
+    store.commit('survey/showSnackbar', {
       type: 'success',
       message: 'Survey was successfully updated!'
     });
@@ -213,9 +215,9 @@ function saveSurvey() {
 // Delete Survey
 function deleteSurvey() {
   if (confirm('Are you sure want to delete this?')) {
-    store.dispatch("deleteSurvey", model.value.id)
+    store.dispatch("survey/deleteSurvey", model.value.id)
       .then(() => {
-        store.commit('showSnackbar', {
+        store.commit('survey/showSnackbar', {
           type: 'success',
           message: 'Survey was successfully deleted!'
         });

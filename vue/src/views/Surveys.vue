@@ -47,17 +47,18 @@ import PageComponent from '../components/PageComponent.vue';
 import SurveyListItem from '../components/SurveyListItem.vue';
 import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 import { computed } from 'vue';
-import store from '../store';
+import { useStore } from 'vuex';
 
-const surveys = computed(() => store.state.surveys);
+const store = useStore();
+const surveys = computed(() => store.getters['survey/getSurveys']);
 
-store.dispatch('getAllSurvey');
+store.dispatch('survey/getAllSurvey');
 
 function deleteSurvey(survey) {
   if( confirm('Are you sure you want to delete this survey?') ) {
-    store.dispatch('deleteSurvey', survey.id)
+    store.dispatch('survey/deleteSurvey', survey.id)
       .then(() => {
-        store.dispatch('getAllSurvey');
+        store.dispatch('survey/getAllSurvey');
       })
   }
 }
@@ -68,7 +69,7 @@ function getForPage(ev, link) {
     return;
   }
 
-  store.dispatch("getAllSurvey", { url: link.url });
+  store.dispatch("survey/getAllSurvey", { url: link.url });
 }
 </script>
 
